@@ -1,0 +1,50 @@
+.tl_holder
+{
+	width: 100%;
+	height: 50px;
+}
+
+.tl_inner
+{
+	height: 50px;
+	overflow-x: scroll;
+	white-space: nowrap;
+}
+
+.tl_year
+{
+	width: 10px;
+	height: 100%;
+	background-color: red;
+	display: inline-block;
+}
+
+.tl_month
+{
+	width: 62px;
+	height: 100%;
+	display: inline-block;
+
+
+}
+
+.tl_monthname
+{
+	width: 100%;
+	height: 30%;
+}
+
+.tl_monthday
+{
+	width: 100%;
+	height: 70%;
+
+}
+
+.tl_day
+{
+	width: 2px;
+	height: 10px;
+	background-color: blue;
+	float:left;
+}
