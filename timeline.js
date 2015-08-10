@@ -14,24 +14,72 @@ function Timeline(startDate, endDate){
 		console.log(this.enddate);
 		$("body").append("<div class='tl_holder'></div>");
 		$(".tl_holder").append("<div class='tl_inner'></div>");
+		$(".tl_holder").append("<div id='tl_marker'></div>");
+		$(".tl_inner").scroll(this.scrollStop);
 
 		for(var x = 0; x < this.enddate - this.startdate; x++)
 		{
-			//console.log('x ' + x);
-			//iterates number of years
-			//add year marker
 			var year = this.startdate + x;
-			$(".tl_inner").append("<div class='tl_year'>" + year +"</div>")
-			//for each month of the year add divs for each day
+			$(".tl_inner").append("<div class='tl_year'>" + year +"<div class='tl_yearline'></div></div>")
 			for(var i=0; i< 12; i++)
 			{
-				//console.log('i ' + i + ' ' + this.months[i]);
 				$(".tl_inner").append("<div class='tl_month " + year + " " + this.months[i] + "'></div>");
 				$(".tl_month." + year +"." + this.months[i]).append("<div class='tl_monthname'>" + this.months[i] +"</div>");
-				//$(".tl_month").append("<div class='tl_monthdays'></div>");
-				//for each month
 
 			}
 		}
 	}
+
+
+
+
+	this.scrollStop = function()
+	{
+
+		var isElementInViewport = function(el) {
+
+	    if (typeof jQuery === "function" && el instanceof jQuery) {
+	        el = el[0];
+	    }
+
+	    var rect = el.getBoundingClientRect();
+
+	    return (
+	        rect.top >= 0 &&
+	        rect.left >= 0 &&
+	        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) && /*or $(window).height() */
+	        rect.right <= (window.innerWidth || document.documentElement.clientWidth) /*or $(window).width() */
+	    );
+		}
+//		console.log(typeof $(".tl_month"));
+//		console.log($(".tl_month"))
+		console.log(this);
+		var fp = this.isElementInViewport;
+		var x = new Array();
+		$(".tl_month").each(function(idx){
+
+			if(isElementInViewport(this))
+			{
+				//the el is in the vp can be processed
+				x.push(this);
+			}
+			
+		});
+			if(x.length != 0)
+			{
+				console.log(x);
+			}
+
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
