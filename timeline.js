@@ -37,15 +37,70 @@ function Timeline(startDate, endDate){
 
 			}
 		}
+
+
+		var start = new Date();
+		start.setDate(20);
+		start.setMonth(10);
+		start.setFullYear(1990);
+
+		var end = new Date();
+		end.setDate(4);
+		end.setMonth(6);
+		end.setFullYear(1991);
+
+		this.addEventRange(start, end);
+
+		var start = new Date();
+		start.setDate(20);
+		start.setMonth(7);
+		start.setFullYear(1991);
+
+		var end = new Date();
+		end.setDate(4);
+		end.setMonth(6);
+		end.setFullYear(1993);
+
+		this.addEventRange(start, end);
+
+		var start = new Date();
+		start.setDate(20);
+		start.setMonth(1);
+		start.setFullYear(1991);
+
+		var end = new Date();
+		end.setDate(4);
+		end.setMonth(11);
+		end.setFullYear(1991);
+
+		this.addEventRange(start, end);
 	}
 
 
-	this.addEventRange = function()
+	this.addEventRange = function(sDate, eDate)
 	{
-		//find div with id for req month, find its offset
-		//calc minor offset from day
-		//create track
-		//offset track iff overlap occurs
+
+		var da = new Date();
+		da.setDate(20);
+		da.setFullYear(1990);
+		da.setMonth(10);
+		var startpos = this.getPixelPositionDate(sDate);
+		var endpos = this.getPixelPositionDate(eDate);
+		var elwidth = endpos - startpos;
+		console.log("will show elwidth");
+		console.log(startpos);
+		console.log(endpos);
+		console.log(elwidth);
+		$(".tl_inner").append("<div class='tl_eventrange' style='left:" 
+														+ startpos + "px; width:"
+														+ elwidth + "px;"
+														+"'></div>")
+	}
+
+	this.getPixelPositionDate = function(DateObj)
+	{
+		var xoff = $('.tl_inner').find(".tl_month." + DateObj.getFullYear() + "." + this.months[DateObj.getMonth()]).position().left;
+		return xoff + parseInt(DateObj.getDate() * 2);
 	}
 
 	this.scrollStop = function()
