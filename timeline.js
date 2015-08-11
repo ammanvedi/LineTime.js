@@ -23,7 +23,16 @@ function Timeline(startDate, endDate){
 			$(".tl_inner").append("<div class='tl_year'>" + year +"<div class='tl_yearline'></div></div>")
 			for(var i=0; i< 12; i++)
 			{
-				$(".tl_inner").append("<div class='tl_month " + year + " " + this.months[i] + "'></div>");
+				$(".tl_inner").append("<div class='tl_month " + year 
+																+ " " 
+																+ this.months[i] 
+																+ "' style='width:" 
+																+ (this.monthsize[i]+1) *2 
+																+ "px;' MONTH=" 
+																+ this.months[i]
+																+ " YEAR="
+																+ year
+																+"></div>");
 				$(".tl_month." + year +"." + this.months[i]).append("<div class='tl_monthname'>" + this.months[i] +"</div>");
 
 			}
@@ -31,10 +40,17 @@ function Timeline(startDate, endDate){
 	}
 
 
-
+	this.addEventRange = function()
+	{
+		//find div with id for req month, find its offset
+		//calc minor offset from day
+		//create track
+		//offset track iff overlap occurs
+	}
 
 	this.scrollStop = function()
 	{
+	
 
 		var isElementInViewport = function(el) {
 
@@ -51,24 +67,55 @@ function Timeline(startDate, endDate){
 	        rect.right <= (window.innerWidth || document.documentElement.clientWidth) /*or $(window).width() */
 	    );
 		}
-//		console.log(typeof $(".tl_month"));
-//		console.log($(".tl_month"))
-		console.log(this);
-		var fp = this.isElementInViewport;
-		var x = new Array();
+
+		var checkWithin = function(element)
+		{
+			//get vp position from element
+			//left = x
+
+			var boundingmarker =  document.getElementById("tl_marker").getBoundingClientRect();
+			var elbounding = element.getBoundingClientRect()
+			//console.log(boundingmarker);
+			var x2 = boundingmarker.left;
+			var x1 = elbounding.left;
+			var w = elbounding.width;
+
+			if( (x2 < x1+w) && (x2 > x1) )
+			{
+				// the rect is intersecting
+				return parseInt((x2 - x1)/2);
+			}
+
+
+			//check vp position vs vp position of the marker
+			//if within return true
+
+			return false;
+		}
+
 		$(".tl_month").each(function(idx){
 
 			if(isElementInViewport(this))
 			{
 				//the el is in the vp can be processed
-				x.push(this);
+				//check if within
+				var y = checkWithin(this)
+				if(y)
+				{
+					//the element is both within the marker and onscreen
+					//console.log(y + " " + this.getAttribute("month") + " " + this.getAttribute("year"));
+					//console.log(y)
+					$(document).trigger("TimelineDateChanged:Scroll", [{
+						"Day": y,
+						"Month": this.getAttribute("month"),
+						"Year": this.getAttribute("year")
+					}])
+					return;
+				}
 			}
 			
 		});
-			if(x.length != 0)
-			{
-				console.log(x);
-			}
+
 
 	}
 }
