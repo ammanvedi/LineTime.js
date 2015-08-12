@@ -38,7 +38,10 @@ function Timeline(startDate, endDate){
 			}
 		}
 
+		this.addEventTrack();
+		this.addEventTrack();
 
+/*
 		var start = new Date();
 		start.setDate(20);
 		start.setMonth(10);
@@ -50,7 +53,7 @@ function Timeline(startDate, endDate){
 		end.setFullYear(1991);
 
 		this.addEventRange(start, end);
-
+*/
 		var start = new Date();
 		start.setDate(20);
 		start.setMonth(7);
@@ -61,7 +64,8 @@ function Timeline(startDate, endDate){
 		end.setMonth(6);
 		end.setFullYear(1993);
 
-		this.addEventRange(start, end);
+		this.addEventRange(start, end, 1);
+		this.addEventMarker(end, 0);
 
 		var start = new Date();
 		start.setDate(20);
@@ -73,11 +77,37 @@ function Timeline(startDate, endDate){
 		end.setMonth(11);
 		end.setFullYear(1991);
 
-		this.addEventRange(start, end);
+		this.addEventRange(start, end, 0);
+
+		var marker = new Date();
+		end.setDate(4);
+		end.setMonth(6);
+		end.setFullYear(1991);
+
+		this.addEventMarker(end, 0);
+
+
+
+	}
+
+	this.addEventTrack = function()
+	{
+		$(".tl_inner").append('<div class="tl_track"></div>');
+		$('.tl_track').css({
+			width: $('.tl_inner')[0].scrollWidth + "px"
+		})
+		console.log($('.tl_inner')[0].scrollWidth);
+	}
+
+	this.addEventMarker = function(eDate, whichtrack)
+	{
+		$('.tl_track').eq(0).append("<div class='tl_eventmarker' style='left:" 
+														+ this.getPixelPositionDate(eDate) + "px;"
+														+"'></div>");
 	}
 
 
-	this.addEventRange = function(sDate, eDate)
+	this.addEventRange = function(sDate, eDate, whichtrack)
 	{
 
 		var da = new Date();
@@ -91,10 +121,10 @@ function Timeline(startDate, endDate){
 		console.log(startpos);
 		console.log(endpos);
 		console.log(elwidth);
-		$(".tl_inner").append("<div class='tl_eventrange' style='left:" 
+		$(".tl_track").eq(whichtrack).append("<div class='tl_tracksegment' style='left:" 
 														+ startpos + "px; width:"
 														+ elwidth + "px;"
-														+"'></div>")
+														+"'></div>");
 	}
 
 	this.getPixelPositionDate = function(DateObj)
@@ -105,8 +135,6 @@ function Timeline(startDate, endDate){
 
 	this.scrollStop = function()
 	{
-	
-
 		var isElementInViewport = function(el) {
 
 	    if (typeof jQuery === "function" && el instanceof jQuery) {
