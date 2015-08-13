@@ -1,3 +1,22 @@
+/*
+TEMP STYLES
+*/
+
+.datereadout
+{
+	font-size: 50px;
+	margin-top: 50px;
+	width: 200px;
+	margin: 0 auto;
+	text-align: center;
+
+}
+
+/*
+END TEMP
+*/
+
+
 .tl_holder
 {
 	width: 100%;

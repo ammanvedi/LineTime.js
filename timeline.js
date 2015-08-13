@@ -2,6 +2,7 @@ function Timeline(startDate, endDate){
 
 	this.startdate = startDate;
 	this.enddate = endDate;
+	this.trackassignments = new Object();
 	this.months = ["JAN", "FEB", "MAR", 
 					"APR", "MAY", "JUN", 
 					"JUL", "AUG", "SEP", 
@@ -10,8 +11,7 @@ function Timeline(startDate, endDate){
 	this.monthsize = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
 	this.createTimeline = function(){
-		console.log(this.startdate);
-		console.log(this.enddate);
+
 		$("body").append("<div class='tl_holder'></div>");
 		$(".tl_holder").append("<div class='tl_inner'></div>");
 		$(".tl_holder").append("<div id='tl_marker'></div>");
@@ -38,8 +38,7 @@ function Timeline(startDate, endDate){
 			}
 		}
 
-		this.addEventTrack();
-		this.addEventTrack();
+		this.loadFromJSON(WBData);
 
 /*
 		var start = new Date();
@@ -53,7 +52,7 @@ function Timeline(startDate, endDate){
 		end.setFullYear(1991);
 
 		this.addEventRange(start, end);
-*/
+
 		var start = new Date();
 		start.setDate(20);
 		start.setMonth(7);
@@ -87,7 +86,7 @@ function Timeline(startDate, endDate){
 		this.addEventMarker(end, 0);
 
 
-
+*/
 	}
 
 	this.addEventTrack = function()
@@ -96,7 +95,6 @@ function Timeline(startDate, endDate){
 		$('.tl_track').css({
 			width: $('.tl_inner')[0].scrollWidth + "px"
 		})
-		console.log($('.tl_inner')[0].scrollWidth);
 	}
 
 	this.addEventMarker = function(eDate, whichtrack)
@@ -104,6 +102,114 @@ function Timeline(startDate, endDate){
 		$('.tl_track').eq(0).append("<div class='tl_eventmarker' style='left:" 
 														+ this.getPixelPositionDate(eDate) + "px;"
 														+"'></div>");
+	}
+
+
+	this.parseDateString = function(str)
+	{
+		var day = str.substring(0,2);
+		var month = str.substring(3,5);
+		var year = str.substring(6);
+		var d = new Date();
+		d.setDate(parseInt(day));
+		d.setMonth(parseInt(month)-1);
+		d.setFullYear(parseInt(year));
+
+		return d;
+
+	}
+
+	this.loadFromJSON = function(JSONDATA)
+	{
+		var self = this;
+
+		JSONDATA.eventranges.forEach(function(range, idx){
+			var freefound = false;
+			var sdate = self.parseDateString(range["startdate"]);
+			var edate = self.parseDateString(range["enddate"]);
+			console.log("DATE", sdate);
+			console.log("DATE", edate);
+			$('.tl_track').each(function(index){
+				console.log("testing", sdate, edate, index)
+				if(!self.determineDateCollision(sdate, edate, index))
+				{
+					//no date collision on this track so add data
+					//but first add the range to the tracking obj
+					// so future collisions can be detected
+					freefound = true;
+					console.log("FREEFOUND", self.determineDateCollision(sdate, edate, index), !undefined)
+
+					if(typeof self.trackassignments[index.toString()] !== Array)
+					{
+						self.trackassignments[index.toString()] = new Array();
+					}
+
+					self.trackassignments[index.toString()].push({
+						"start" : sdate,
+						"end" : edate
+					});
+
+					//add actual range
+					self.addEventRange(sdate, edate, index);
+					
+				}
+
+			});
+
+			if(!freefound)
+			{
+				//no free tracks at all, must create a new track altogether
+				console.log("FREE NOT FOUND FOR ", sdate, edate)
+				self.addEventTrack();
+				if(typeof self.trackassignments[($(".tl_track").length-1).toString()] !== Array)
+				{
+					self.trackassignments[($(".tl_track").length-1).toString()] = new Array();
+				}
+				self.trackassignments[($(".tl_track").length-1).toString()].push({
+					"start" : sdate,
+					"end" : edate
+				});
+				self.addEventRange(sdate, edate, $(".tl_track").length-1)
+			}
+		});
+
+		console.log(this)
+		console.log(self)
+
+
+	}
+
+	this.determineDateCollision = function(startdate, enddate, tracktocheck)
+	{
+		//make sure both startdate and end date do not fall into 
+		//any already present range on track specified
+		if(this.trackassignments[tracktocheck.toString()] == undefined)
+		{
+			console.log("NO CONFLICT")
+			return false;
+		}
+
+		var res;
+
+		this.trackassignments[tracktocheck.toString()].forEach(function(daterangeobj, index){
+			console.log("checking incoming", startdate, enddate)
+			console.log("versus ", daterangeobj["start"], daterangeobj["end"])
+			if((startdate > daterangeobj["end"]) || (enddate < daterangeobj["start"]))
+			{
+				//no conflict 
+				console.log("NO CONFLICT")
+				res = false
+			}else
+			{
+				//there is a conflicat with the dates, return true to indicate
+				console.log("CONFLICT", startdate, enddate, tracktocheck)
+				res = true;
+			}
+		});
+
+		return res;
+
+
 	}
 
 
@@ -117,10 +223,6 @@ function Timeline(startDate, endDate){
 		var startpos = this.getPixelPositionDate(sDate);
 		var endpos = this.getPixelPositionDate(eDate);
 		var elwidth = endpos - startpos;
-		console.log("will show elwidth");
-		console.log(startpos);
-		console.log(endpos);
-		console.log(elwidth);
 		$(".tl_track").eq(whichtrack).append("<div class='tl_tracksegment' style='left:" 
 														+ startpos + "px; width:"
 														+ elwidth + "px;"
