@@ -1,10 +1,10 @@
 var linetime = function(){
 
-	var pvt = "hi guys";
-	var timeline = new Timeline(2010, 2019);
+	var timeline;
 
 	return {
-		test: function(txt){
+		init: function(){
+			timeline = new Timeline(2010, 2014, WBData);
 			timeline.createTimeline();
 		}
 	}

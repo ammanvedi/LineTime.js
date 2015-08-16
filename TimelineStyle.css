@@ -39,8 +39,6 @@ END TEMP
 .tl_eventrange
 {
 	height: 10px;
-	background-color: blue;
-
 	position:relative;
 
 }
@@ -51,6 +49,8 @@ END TEMP
 	overflow-x: scroll;
 	white-space: nowrap;
 	overflow-y: visible;
+
+
 }
 
 .tl_year
@@ -75,7 +75,7 @@ END TEMP
 	width: 62px;
 	height: 30px;
 	display: inline-block;
-
+	border-bottom: dashed 5px black;
 
 }
 
@@ -93,9 +93,15 @@ END TEMP
 
 }
 
+.tl_spacer
+{
+	width: 900px;
+	display: block;
+}
+
 .tl_day
 {
-	width: 2px;
+	width: 4px;
 	height: 10px;
 	background-color: blue;
 	float:left;
@@ -104,12 +110,15 @@ END TEMP
 
 .tl_track
 {
-	width: 100%;
+
 	height: 10px;
-	background-color: rgba(0,0,0,0.2);
+
 	position: relative;
 	margin-top: 5px;
+
 }
+
+
 
 .tl_tracksegment
 {
@@ -123,9 +132,54 @@ END TEMP
 .tl_eventmarker
 {
 	position: absolute;
-	width: 20px;
-	height: 20px;
+	width: 15px;
+	height: 15px;
+	border-radius: 8px;
+	top: -3px;
+	border: solid 4px #34495E;
+	z-index: 1000;
+}
+
+
+#sv_holder
+{
+	width: 100%;
+}
+
+.sv_trackview
+{
+	width: 100%;
+
+
+}
+
+.sv_colbar
+{
+	width: 100%;
+	height: 2px;
 	background-color: red;
 }
 
+.sv_title
+{
+	width: calc(100% - 50px);
+	display: inline-block;
+	height: 30px;
+	float: left;
+}
+
+.sv_content
+{
+	width: 100%;
+	display: inline-block;
+	height: 100px;
+}
+
+.sv_expand
+{
+	width: 50px;
+	display: inline-block;
+	height: 30px;
+	float: left;
+}
 
